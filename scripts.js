@@ -150,12 +150,12 @@ const controlSnake = (event) => {
 };
 
 const checkFieldBorder = () => {
-  if (snakeHeadPosition.x > playingFieldSize.width) {
+  if (snakeHeadPosition.x === playingFieldSize.width) {
     snakeHeadPosition.x = 0;
   } else if (snakeHeadPosition.x < 0) {
     snakeHeadPosition.x = playingFieldSize.width;
   }
-  if (snakeHeadPosition.y > playingFieldSize.height) {
+  if (snakeHeadPosition.y === playingFieldSize.height) {
     snakeHeadPosition.y = 0;
   } else if (snakeHeadPosition.y < 0) {
     snakeHeadPosition.y = playingFieldSize.height;
