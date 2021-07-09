@@ -82,7 +82,7 @@ main {
 .playingField {
   position: relative;
   width: 1200px;
-  height: 550px;
+  height: 600px;
   background-color: rgb(36, 36, 36);
   border-radius: 15px;
   box-shadow: -15px 15px 30px #1c1c1c, 15px -15px 30px #262626;
@@ -90,8 +90,8 @@ main {
 }
 .snakeCell {
   position: absolute;
-  width: 35px;
-  height: 35px;
+  width: 30px;
+  height: 30px;
   background-color: rgb(231, 231, 231);
   border-radius: 10px;
   /*box-shadow: -5px 5px 10px #1c1c1c, 5px -5px 10px #262626;*/
@@ -99,8 +99,8 @@ main {
 }
 .food {
   position: absolute;
-  width: 35px;
-  height: 35px;
+  width: 30px;
+  height: 30px;
   background-color: #ffef11;
   border-radius: 10px;
   /*box-shadow: -5px 5px 10px #1c1c1c, 5px -5px 10px #262626;*/

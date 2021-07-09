@@ -7,11 +7,11 @@ const recordScore = document.getElementById("recordScore");
 
 const playingFieldSize = {
   width: 1200,
-  height: 550,
+  height: 600,
 };
 const cellSize = {
-  width: 35,
-  height: 35,
+  width: 30,
+  height: 30,
 };
 const cellForField = {
   width: playingFieldSize.width / cellSize.width,
@@ -47,8 +47,9 @@ const gameOver = () => {};
 const getRecordScore = () => {};
 
 const randomOffset = () => {
-  let x = Math.floor(playingFieldSize.width * Math.random());
-  let y = Math.floor(playingFieldSize.height * Math.random());
+  let x = Math.floor(Math.random() * cellForField.width) * cellSize.width;
+  let y = Math.floor(Math.random() * cellForField.height) * cellSize.height;
+  console.log(x, y);
 
   return { x, y };
 };
@@ -57,8 +58,7 @@ const spawnFood = () => {
   let offset = randomOffset();
   const createFood = document.createElement("div");
   createFood.classList.add("food");
-  createFood.style.marginTop = `${offset.y}px`;
-  createFood.style.marginLeft = `${offset.x}px`;
+  createFood.style.transform = `translate(${offset.x}px, ${offset.y}px)`;
   console.log("spawn food", createFood);
 
   return playingField.appendChild(createFood);
@@ -108,7 +108,7 @@ const controlSnake = (event) => {
   } else if (
     (event.key.toLowerCase() === "w" ||
       event.key.toLowerCase() === "ц" ||
-      event.key == "ArrowTop") &&
+      event.key == "ArrowUp") &&
     moveDirection !== "down"
   ) {
     moveDirection = "top";
