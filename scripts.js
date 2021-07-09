@@ -18,6 +18,7 @@ const cellForField = {
   height: playingFieldSize.height / cellSize.height,
 };
 
+let scoreData = -1;
 let snakeStartSize = 5;
 let snakePiecePositions = [];
 let snakePiece = [];
@@ -49,11 +50,23 @@ if (
 
 const gameOver = () => {
   // alert("gameOver");
+  if (scoreData > localStorage.getItem("recordScore")) {
+    localStorage.setItem("recordScore", scoreData);
+    getRecordScore();
+  }
 };
 
-const setScore = () => {};
+const setScore = () => {
+  scoreData++;
+  score.textContent = scoreData;
+  console.log(scoreData);
+};
 
-const getRecordScore = () => {};
+const getRecordScore = () => {
+  if (localStorage.getItem("recordScore")) {
+    recordScore.textContent = localStorage.getItem("recordScore");
+  }
+};
 
 const randomOffset = () => {
   let x = Math.floor(Math.random() * cellForField.width) * cellSize.width;
@@ -65,6 +78,7 @@ const randomOffset = () => {
 };
 
 const spawnFood = () => {
+  setScore();
   let offset = randomOffset();
   const createFood = document.createElement("div");
   createFood.classList.add("food");
@@ -95,13 +109,16 @@ const spawnSnake = () => {
 };
 
 const checkCollisionSnake = () => {
-  snakePiecePositions.forEach((item, index) =>
-    index !== 0 &&
-    item.x === snakeHeadPosition.x &&
-    item.y === snakeHeadPosition.y
-      ? gameOver()
-      : null
-  );
+  if (
+    snakePiecePositions.some(
+      (item, index) =>
+        index !== 0 &&
+        item.x === snakeHeadPosition.x &&
+        item.y === snakeHeadPosition.y
+    )
+  ) {
+    gameOver();
+  }
 };
 
 const checkCollisionFoodWithSnake = () => {
@@ -111,8 +128,7 @@ const checkCollisionFoodWithSnake = () => {
         delete food[index] &&
         delete foodsPositions[index] &&
         spawnFood() &&
-        spawnOneSnakeCell(snakeHeadPosition.y, snakeHeadPosition.x) &&
-        setScore()
+        spawnOneSnakeCell(snakeHeadPosition.y, snakeHeadPosition.x)
       : null
   );
 };
@@ -230,3 +246,4 @@ const gameStart = () => {
 
 startBtn.addEventListener("click", gameStart);
 playingField.addEventListener("click", gameStart);
+getRecordScore();
