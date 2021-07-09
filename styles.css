@@ -93,7 +93,7 @@ main {
   width: 30px;
   height: 30px;
   background-color: rgb(231, 231, 231);
-  border-radius: 10px;
+  border-radius: 5px;
   /*box-shadow: -5px 5px 10px #1c1c1c, 5px -5px 10px #262626;*/
   z-index: 3;
 }
