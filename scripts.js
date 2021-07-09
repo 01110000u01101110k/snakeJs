@@ -112,7 +112,7 @@ const checkCollisionFoodWithSnake = () => {
         delete foodsPositions[index] &&
         spawnFood() &&
         spawnOneSnakeCell(snakeHeadPosition.y, snakeHeadPosition.x) &&
-        getRecordScore()
+        setScore()
       : null
   );
 };
@@ -146,6 +146,19 @@ const controlSnake = (event) => {
     moveDirection !== "top"
   ) {
     moveDirection = "down";
+  }
+};
+
+const checkFieldBorder = () => {
+  if (snakeHeadPosition.x > playingFieldSize.width) {
+    snakeHeadPosition.x = 0;
+  } else if (snakeHeadPosition.x < 0) {
+    snakeHeadPosition.x = playingFieldSize.width;
+  }
+  if (snakeHeadPosition.y > playingFieldSize.height) {
+    snakeHeadPosition.y = 0;
+  } else if (snakeHeadPosition.y < 0) {
+    snakeHeadPosition.y = playingFieldSize.height;
   }
 };
 
@@ -184,6 +197,7 @@ const moveSnake = () => {
   snakePiecePositions.unshift(snakePiecePositions.pop());
   checkCollisionFoodWithSnake();
   checkCollisionSnake();
+  checkFieldBorder();
 };
 
 const changeFrame = () => {
