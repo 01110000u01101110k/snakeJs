@@ -48,7 +48,7 @@ if (
 }
 
 const gameOver = () => {
-  alert("gameOver");
+  // alert("gameOver");
 };
 
 const setScore = () => {};
@@ -96,9 +96,9 @@ const spawnSnake = () => {
 
 const checkCollisionSnake = () => {
   snakePiecePositions.forEach((item, index) =>
+    index !== 0 &&
     item.x === snakeHeadPosition.x &&
-    item.y === snakeHeadPosition.y &&
-    index !== 0
+    item.y === snakeHeadPosition.y
       ? gameOver()
       : null
   );
@@ -111,7 +111,8 @@ const checkCollisionFoodWithSnake = () => {
         delete food[index] &&
         delete foodsPositions[index] &&
         spawnFood() &&
-        spawnOneSnakeCell(snakeHeadPosition.y, snakeHeadPosition.x)
+        spawnOneSnakeCell(snakeHeadPosition.y, snakeHeadPosition.x) &&
+        getRecordScore()
       : null
   );
 };
@@ -182,12 +183,11 @@ const moveSnake = () => {
   snakePiece.unshift(snakePiece.pop());
   snakePiecePositions.unshift(snakePiecePositions.pop());
   checkCollisionFoodWithSnake();
+  checkCollisionSnake();
 };
 
 const changeFrame = () => {
   moveSnake();
-  checkCollisionSnake();
-  getRecordScore();
 };
 
 const mainLoop = () => {
