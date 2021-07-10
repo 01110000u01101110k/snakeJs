@@ -1,4 +1,5 @@
 const startBtn = document.getElementById("play");
+const playIcon = document.getElementById("playIcon");
 const playingField = document.getElementById("playingField");
 const snake = document.getElementById("snake");
 
@@ -37,7 +38,7 @@ let foodsPositions = [];
 
 let isGameOver = false;
 let isGamePlayed = false;
-let mainAnimationFrame;
+let mainAnimationFrame = null;
 
 let mobile = false;
 if (
@@ -47,14 +48,6 @@ if (
 ) {
   mobile = true;
 }
-
-const gameOver = () => {
-  // alert("gameOver");
-  if (scoreData > localStorage.getItem("recordScore")) {
-    localStorage.setItem("recordScore", scoreData);
-    getRecordScore();
-  }
-};
 
 const setScore = () => {
   scoreData++;
@@ -71,6 +64,9 @@ const getRecordScore = () => {
 const randomOffset = () => {
   let x = Math.floor(Math.random() * cellForField.width) * cellSize.width;
   let y = Math.floor(Math.random() * cellForField.height) * cellSize.height;
+  if (snakePiecePositions.some((item) => item.x === x && item.y == y)) {
+    return randomOffset();
+  }
   foodPosition.x = x;
   foodPosition.y = y;
 
@@ -91,7 +87,13 @@ const spawnFood = () => {
 
 const spawnOneSnakeCell = (snakeCellPositionY, snakeCellPositionX) => {
   const createSnake = document.createElement("div");
+
   createSnake.classList.add("snakeCell");
+  /*if (snakePiece.length % 2) {
+    createSnake.classList.add("snakeCell");
+  } else {
+    createSnake.classList.add("snakeCellSecond");
+  }*/
   createSnake.style.transform = `translate(${snakeCellPositionX}px, ${snakeCellPositionY}px)`;
   snakePiece.push(createSnake);
   playingField.appendChild(createSnake);
@@ -109,6 +111,26 @@ const spawnSnake = () => {
 };
 
 const checkCollisionSnake = () => {
+  /*for (let i = 0; i < snakePiecePositions.length; i++) {
+    console.log("<s----------------->");
+    console.log("snakePiecePositions", snakePiecePositions);
+    console.log("snakeHeadPosition", snakeHeadPosition);
+
+    console.log("snakePiecePositions[i].y", snakePiecePositions[i].y);
+    console.log("snakeHeadPosition.y", snakeHeadPosition.y);
+    console.log("snakePiecePositions[i].x", snakePiecePositions[i].x);
+    console.log("snakeHeadPosition.x", snakeHeadPosition.x);
+    console.log(
+      "snakePiecePositions[i].x === snakeHeadPosition.x",
+      snakePiecePositions[i].x === snakeHeadPosition.x
+    );
+    console.log(
+      "snakePiecePositions[i].y === snakeHeadPosition.y",
+      snakePiecePositions[i].y === snakeHeadPosition.y
+    );
+    console.log("<e----------------->");
+  }*/
+
   if (
     snakePiecePositions.some(
       (item, index) =>
@@ -122,11 +144,23 @@ const checkCollisionSnake = () => {
 };
 
 const checkCollisionFoodWithSnake = () => {
+  /*for (let i = 0; i < foodsPositions.length; i++) {
+    if (
+      foodsPositions[i].x === snakeHeadPosition.x &&
+      foodsPositions[i].y === snakeHeadPosition.y
+    ) {
+      playingField.removeChild(food[i]);
+      delete food[i];
+      delete foodsPositions[i];
+      spawnFood();
+      spawnOneSnakeCell(snakeHeadPosition.y, snakeHeadPosition.x);
+    }
+  }*/
   foodsPositions.forEach((item, index) =>
     item.x === snakeHeadPosition.x && item.y === snakeHeadPosition.y
       ? playingField.removeChild(food[index]) &&
-        delete food[index] &&
-        delete foodsPositions[index] &&
+        food.slice(index, 1) &&
+        foodsPositions.slice(index, 1) &&
         spawnFood() &&
         spawnOneSnakeCell(snakeHeadPosition.y, snakeHeadPosition.x)
       : null
@@ -211,8 +245,8 @@ const moveSnake = () => {
   }
   snakePiece.unshift(snakePiece.pop());
   snakePiecePositions.unshift(snakePiecePositions.pop());
-  checkCollisionFoodWithSnake();
   checkCollisionSnake();
+  checkCollisionFoodWithSnake();
   checkFieldBorder();
 };
 
@@ -229,12 +263,52 @@ const deleteMainLoop = () => {
   mainAnimationFrame = null;
 };
 
+const removeAllNodes = () => {
+  while (playingField.firstChild) {
+    playingField.firstChild.remove();
+  }
+};
+
+const gameOver = () => {
+  deleteMainLoop();
+  alert(`Поражение, счет: ${scoreData}`);
+  removeAllNodes();
+  scoreData = -1;
+  snakeStartSize = 5;
+  snakePiecePositions = [];
+  snakePiece = [];
+  snakeHeadPosition = {
+    x: playingFieldSize.width / 2,
+    y: playingFieldSize.height / 2,
+  };
+  foodPosition = {
+    x: null,
+    y: null,
+  };
+  moveDirection = "left";
+
+  food = [];
+  foodsPositions = [];
+
+  isGameOver = false;
+  isGamePlayed = false;
+  mainAnimationFrame = null;
+  playIcon.src = "icons/play.svg";
+
+  if (scoreData > localStorage.getItem("recordScore")) {
+    localStorage.setItem("recordScore", scoreData);
+    getRecordScore();
+  }
+};
+
 const gameStart = () => {
   if (isGamePlayed) {
+    playIcon.src = "icons/play.svg";
     alert("pause");
     deleteMainLoop();
     isGamePlayed = false;
   } else {
+    playIcon.src = "icons/pause.svg";
     document.addEventListener("keydown", controlSnake);
     //document.addEventListener("keyup", controlPlayerRemove);
     isGamePlayed = true;

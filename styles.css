@@ -97,6 +97,15 @@ main {
   /*box-shadow: -5px 5px 10px #1c1c1c, 5px -5px 10px #262626;*/
   z-index: 3;
 }
+.snakeCellSecond {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  background-color: rgb(135, 24, 179);
+  border-radius: 5px;
+  /*box-shadow: -5px 5px 10px #1c1c1c, 5px -5px 10px #262626;*/
+  z-index: 3;
+}
 .food {
   position: absolute;
   width: 30px;
