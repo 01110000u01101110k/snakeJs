@@ -68,9 +68,6 @@ const randomOffset = () => {
     y = Math.floor(Math.random() * cellForField.height) * cellSize.height;
   };
   setRandomValues();
-  if (snakePiecePositions.some((item) => item.x === x && item.y == y)) {
-    setRandomValues();
-  }
   foodPosition.x = x;
   foodPosition.y = y;
 
@@ -79,7 +76,20 @@ const randomOffset = () => {
 
 const spawnFood = () => {
   setScore();
-  let offset = randomOffset();
+  let offset;
+  const setRandomOffset = () => {
+    offset = randomOffset();
+    if (
+      snakePiecePositions.some(
+        (item) => item.x === offset.x && item.y == offset.y
+      )
+    ) {
+      setRandomOffset();
+    } else {
+      return offset;
+    }
+  };
+  setRandomOffset();
   const createFood = document.createElement("div");
   createFood.classList.add("food");
   createFood.style.transform = `translate(${offset.x}px, ${offset.y}px)`;
@@ -93,7 +103,8 @@ const spawnOneSnakeCell = (snakeCellPositionY, snakeCellPositionX) => {
   const createSnake = document.createElement("div");
 
   //createSnake.classList.add("snakeCell");
-  if (snakePiece.length > 6 && snakePiece.length % 2) {
+  let randomNum = Math.floor(Math.random() * 3);
+  if (snakePiece.length > 6 && randomNum > 1) {
     createSnake.classList.add("snakeCellSecond");
   } else {
     createSnake.classList.add("snakeCell");
