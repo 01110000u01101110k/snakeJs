@@ -52,7 +52,6 @@ if (
 const setScore = () => {
   scoreData++;
   score.textContent = scoreData;
-  console.log(scoreData);
 };
 
 const getRecordScore = () => {
