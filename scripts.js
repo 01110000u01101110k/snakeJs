@@ -62,10 +62,15 @@ const getRecordScore = () => {
 };
 
 const randomOffset = () => {
-  let x = Math.floor(Math.random() * cellForField.width) * cellSize.width;
-  let y = Math.floor(Math.random() * cellForField.height) * cellSize.height;
+  let x;
+  let y;
+  const setRandomValues = () => {
+    x = Math.floor(Math.random() * cellForField.width) * cellSize.width;
+    y = Math.floor(Math.random() * cellForField.height) * cellSize.height;
+  };
+  setRandomValues();
   if (snakePiecePositions.some((item) => item.x === x && item.y == y)) {
-    return randomOffset();
+    setRandomValues();
   }
   foodPosition.x = x;
   foodPosition.y = y;
@@ -88,12 +93,12 @@ const spawnFood = () => {
 const spawnOneSnakeCell = (snakeCellPositionY, snakeCellPositionX) => {
   const createSnake = document.createElement("div");
 
-  createSnake.classList.add("snakeCell");
-  /*if (snakePiece.length % 2) {
-    createSnake.classList.add("snakeCell");
-  } else {
+  //createSnake.classList.add("snakeCell");
+  if (snakePiece.length > 6 && snakePiece.length % 2) {
     createSnake.classList.add("snakeCellSecond");
-  }*/
+  } else {
+    createSnake.classList.add("snakeCell");
+  }
   createSnake.style.transform = `translate(${snakeCellPositionX}px, ${snakeCellPositionY}px)`;
   snakePiece.push(createSnake);
   playingField.appendChild(createSnake);
@@ -111,26 +116,6 @@ const spawnSnake = () => {
 };
 
 const checkCollisionSnake = () => {
-  /*for (let i = 0; i < snakePiecePositions.length; i++) {
-    console.log("<s----------------->");
-    console.log("snakePiecePositions", snakePiecePositions);
-    console.log("snakeHeadPosition", snakeHeadPosition);
-
-    console.log("snakePiecePositions[i].y", snakePiecePositions[i].y);
-    console.log("snakeHeadPosition.y", snakeHeadPosition.y);
-    console.log("snakePiecePositions[i].x", snakePiecePositions[i].x);
-    console.log("snakeHeadPosition.x", snakeHeadPosition.x);
-    console.log(
-      "snakePiecePositions[i].x === snakeHeadPosition.x",
-      snakePiecePositions[i].x === snakeHeadPosition.x
-    );
-    console.log(
-      "snakePiecePositions[i].y === snakeHeadPosition.y",
-      snakePiecePositions[i].y === snakeHeadPosition.y
-    );
-    console.log("<e----------------->");
-  }*/
-
   if (
     snakePiecePositions.some(
       (item, index) =>
@@ -139,6 +124,7 @@ const checkCollisionSnake = () => {
         item.y === snakeHeadPosition.y
     )
   ) {
+    snakePiece[0].classList.add("snakeHeadDamaged");
     gameOver();
   }
 };
@@ -272,6 +258,10 @@ const removeAllNodes = () => {
 const gameOver = () => {
   deleteMainLoop();
   alert(`Поражение, счет: ${scoreData}`);
+  if (scoreData > localStorage.getItem("recordScore")) {
+    localStorage.setItem("recordScore", scoreData);
+    getRecordScore();
+  }
   removeAllNodes();
   scoreData = -1;
   snakeStartSize = 5;
@@ -294,11 +284,6 @@ const gameOver = () => {
   isGamePlayed = false;
   mainAnimationFrame = null;
   playIcon.src = "icons/play.svg";
-
-  if (scoreData > localStorage.getItem("recordScore")) {
-    localStorage.setItem("recordScore", scoreData);
-    getRecordScore();
-  }
 };
 
 const gameStart = () => {
