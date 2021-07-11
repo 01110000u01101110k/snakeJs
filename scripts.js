@@ -140,19 +140,19 @@ const checkCollisionSnake = () => {
 };
 
 const checkCollisionFoodWithSnake = () => {
-  /*for (let i = 0; i < foodsPositions.length; i++) {
+  for (let i = 0; i < foodsPositions.length; i++) {
     if (
       foodsPositions[i].x === snakeHeadPosition.x &&
       foodsPositions[i].y === snakeHeadPosition.y
     ) {
       playingField.removeChild(food[i]);
-      delete food[i];
-      delete foodsPositions[i];
+      food = food.slice(i, 1);
+      foodsPositions = foodsPositions.slice(i, 1);
       spawnFood();
       spawnOneSnakeCell(snakeHeadPosition.y, snakeHeadPosition.x);
     }
-  }*/
-  foodsPositions.forEach((item, index) =>
+  }
+  /*foodsPositions.forEach((item, index) =>
     item.x === snakeHeadPosition.x && item.y === snakeHeadPosition.y
       ? playingField.removeChild(food[index]) &&
         food.slice(index, 1) &&
@@ -160,7 +160,7 @@ const checkCollisionFoodWithSnake = () => {
         spawnFood() &&
         spawnOneSnakeCell(snakeHeadPosition.y, snakeHeadPosition.x)
       : null
-  );
+  );*/
 };
 
 const controlSnake = (event) => {
