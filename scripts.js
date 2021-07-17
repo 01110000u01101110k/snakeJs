@@ -1,7 +1,6 @@
 const startBtn = document.getElementById("play");
 const playIcon = document.getElementById("playIcon");
 const playingField = document.getElementById("playingField");
-const snake = document.getElementById("snake");
 
 const score = document.getElementById("score");
 const recordScore = document.getElementById("recordScore");
@@ -36,7 +35,6 @@ let moveDirection = "left";
 let food = [];
 let foodsPositions = [];
 
-let isGameOver = false;
 let isGamePlayed = false;
 let mainAnimationFrame = null;
 
@@ -48,6 +46,17 @@ if (
 ) {
   mobile = true;
 }
+
+const removeAllNodes = () => {
+  while (playingField.firstChild) {
+    playingField.firstChild.remove();
+  }
+};
+
+const deleteMainLoop = () => {
+  clearInterval(mainAnimationFrame);
+  mainAnimationFrame = null;
+};
 
 const setScore = () => {
   scoreData++;
@@ -74,6 +83,36 @@ const randomOffset = () => {
   return { x, y };
 };
 
+const gameOver = () => {
+  deleteMainLoop();
+  alert(`Поражение, счет: ${scoreData}`);
+  if (scoreData > localStorage.getItem("recordScore")) {
+    localStorage.setItem("recordScore", scoreData);
+    getRecordScore();
+  }
+  removeAllNodes();
+  scoreData = -1;
+  snakeStartSize = 5;
+  snakePiecePositions = [];
+  snakePiece = [];
+  snakeHeadPosition = {
+    x: playingFieldSize.width / 2,
+    y: playingFieldSize.height / 2,
+  };
+  foodPosition = {
+    x: null,
+    y: null,
+  };
+  moveDirection = "left";
+
+  food = [];
+  foodsPositions = [];
+
+  isGamePlayed = false;
+  mainAnimationFrame = null;
+  playIcon.src = "icons/play.svg";
+};
+
 const spawnFood = () => {
   setScore();
   let offset;
@@ -81,10 +120,10 @@ const spawnFood = () => {
     offset = randomOffset();
     if (
       snakePiecePositions.some(
-        (item) => item.x === offset.x && item.y == offset.y
+        (item) => item.x == offset.x && item.y == offset.y
       )
     ) {
-      setRandomOffset();
+      return setRandomOffset();
     } else {
       return offset;
     }
@@ -252,48 +291,6 @@ const changeFrame = () => {
 
 const mainLoop = () => {
   mainAnimationFrame = setInterval(changeFrame, 200);
-};
-
-const deleteMainLoop = () => {
-  clearInterval(mainAnimationFrame);
-  mainAnimationFrame = null;
-};
-
-const removeAllNodes = () => {
-  while (playingField.firstChild) {
-    playingField.firstChild.remove();
-  }
-};
-
-const gameOver = () => {
-  deleteMainLoop();
-  alert(`Поражение, счет: ${scoreData}`);
-  if (scoreData > localStorage.getItem("recordScore")) {
-    localStorage.setItem("recordScore", scoreData);
-    getRecordScore();
-  }
-  removeAllNodes();
-  scoreData = -1;
-  snakeStartSize = 5;
-  snakePiecePositions = [];
-  snakePiece = [];
-  snakeHeadPosition = {
-    x: playingFieldSize.width / 2,
-    y: playingFieldSize.height / 2,
-  };
-  foodPosition = {
-    x: null,
-    y: null,
-  };
-  moveDirection = "left";
-
-  food = [];
-  foodsPositions = [];
-
-  isGameOver = false;
-  isGamePlayed = false;
-  mainAnimationFrame = null;
-  playIcon.src = "icons/play.svg";
 };
 
 const gameStart = () => {
